@@ -1,59 +1,85 @@
 
-var num = 42;
-var range = 120;
-
-var ax = [];
-var ay = [];
-
+var colors = [];
 
 function setup() {
-  createCanvas(windowWidth, windowHeight);
-    r = random(255);
-    g = random(255);
-    b = random(255);
-  for ( var i = 0; i < num; i++ ) {
-    ax[i] = width / 2;
-    ay[i] = height / 2;
-  }
-
-  frameRate(22);
+  createCanvas(1500,500);
+  noFill();
+  addColors();
+  smooth(8);
+  background(20);
+	noLoop();
 }
+
+
+function addColors() {
+  var c;
+  c = color(0, 138, 176);
+  colors[0] = c;
+  c = color(241,100,93);
+  colors[1] = c;
+  c = color(0,176,133);
+  colors[2] = c;
+  c = color(233,108,31);
+  colors[3] = c;
+  c = color(241,114,172);
+  colors[4] = c;
+  c = color(222,57,108);
+  colors[5] = c;
+  c = color(231,206,0);
+  colors[6] = c;
+  c = color(72,22,108);
+  colors[7] = c;
+  c = color(44,164,74);
+  colors[8] = c;
+
+
+}
+
+function getRandomColor() {
+
+  var i = Math.floor(random(colors.length));
+  var c = colors[i];
+  return c;
+
+}
+
 
 function draw() {
-  strokeWeight(3);
-  background(0, 0, 0);
 
+  makeRibbons();
 
-  // Shift all elements 1 place to the left
-  for ( var i = 1; i < num; i++ ) {
-    ax[i - 1] = ax[i];
-    ay[i - 1] = ay[i];
-  }
-
-  // Put a new value at the end of the array
-  ax[num - 1] += random(-range, range);
-  ay[num - 1] += random(-range, range);
-
-  // Constrain all points to the screen
-  ax[num - 1] = constrain(ax[num - 1], 0, width);
-  ay[num - 1] = constrain(ay[num - 1], 0, height);
-
-  // Draw a line connecting the points
-  for ( var j = 1; j < num; j++ ) {
-    var val = j / num * 204.0 + 51;
-    stroke(val);
-    fill(r, g, b);
-    stroke(r, g, b);
-    line(ax[j - 1], ay[j - 1], ax[j], ay[j]);
-  }
 }
 
-function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
-}
-// When the user clicks the mouse
-function mousePressed() {
-    r = random(255);
-    g = random(255);
-    b = random(255);
+
+
+
+function makeRibbons() {
+
+  for (var i=0; i < random(10)+2; i++) {
+
+    var strokeW = random(5)+3;
+
+    var amount = 500;
+    var frequency = random(1.0)/15;
+    var offset = random(200)+5;
+
+    var col = getRandomColor();
+
+    strokeWeight(strokeW);
+    stroke(col,180);
+    var startY = height/2;
+    beginShape();
+      vertex(0, startY);
+       for (var c=1; c < amount; c++) {
+         var sinoffset = sin(frequency*c);
+         var sinX = c*(width/amount);
+         var sinY = startY + (sinoffset*offset);
+         bezierVertex(sinX,sinY,sinX,sinY-1,sinX,sinY);
+       }
+    endShape();
+
   }
+
+
+
+}
